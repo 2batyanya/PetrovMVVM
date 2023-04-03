@@ -8,14 +8,15 @@ import android.widget.TextView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.Transformations
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
-    val myLiveData = MyLiveData()
-    lateinit var observer: Observer<String>
+    var ldString = MutableLiveData<String>()
+    var ldInt = MutableLiveData<Int>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,24 +25,23 @@ class MainActivity : AppCompatActivity() {
         var editText = findViewById<EditText>(R.id.edit_text)
         var buttonSave = findViewById<Button>(R.id.button_save)
         var textView1 = findViewById<TextView>(R.id.test_text1)
+        var textView2 = findViewById<TextView>(R.id.test_text)
 
-        observer = Observer{
-            textView1.text = it
-        }
+        ldString.value = "ldString"
+        ldInt.value = 1
+
+        textView2.text = ldString.value + " string"
+        textView1.text = ldInt.value.toString() + " Int"
+
 
         buttonSave.setOnClickListener {
-            myLiveData.setValueToLiveData(editText.text.toString())
+            ldInt = Transformations.map(ldString){
+                it.toInt()
+            } as MutableLiveData<Int>
+
+            ldString.observe(this, Observer {
+                textView2.text = it
+            })
         }
     }
-
-    override fun onStart() {
-        super.onStart()
-        myLiveData.observe(this, observer)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        myLiveData.removeObserver(observer)
-    }
-
 }
