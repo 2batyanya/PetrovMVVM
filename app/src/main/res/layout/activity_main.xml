@@ -37,10 +37,19 @@
     <Button
         android:id="@+id/button_save"
         android:layout_width="150dp"
-        android:text="save"
+        android:text="save ld 1"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/edit_text" />
+
+    <Button
+        android:id="@+id/button_save2"
+        android:layout_width="150dp"
+        android:text="save ld 2"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/button_save" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

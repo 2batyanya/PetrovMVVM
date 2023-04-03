@@ -6,6 +6,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.Transformations
@@ -15,33 +16,40 @@ import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
-    var ldString = MutableLiveData<String>()
-    var ldInt = MutableLiveData<Int>()
-
+    val liveDataString = MutableLiveData<String>()
+    val liveDataString2 = MutableLiveData<String>()
+    val mediatorLiveData = MediatorLiveData<String>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         var editText = findViewById<EditText>(R.id.edit_text)
         var buttonSave = findViewById<Button>(R.id.button_save)
+        var buttonSave2 = findViewById<Button>(R.id.button_save2)
         var textView1 = findViewById<TextView>(R.id.test_text1)
         var textView2 = findViewById<TextView>(R.id.test_text)
 
-        ldString.value = "ldString"
-        ldInt.value = 1
+        liveDataString.value = "string"
+        liveDataString2.value = "string2"
 
-        textView2.text = ldString.value + " string"
-        textView1.text = ldInt.value.toString() + " Int"
+        mediatorLiveData.addSource(liveDataString) {
+            textView1.text = it
+        }
 
+        mediatorLiveData.addSource(liveDataString2){
+            textView2.text = it
+        }
+
+        mediatorLiveData.observe(this, Observer{
+
+        })
 
         buttonSave.setOnClickListener {
-            ldInt = Transformations.map(ldString){
-                it.toInt()
-            } as MutableLiveData<Int>
+            liveDataString.value = editText.text.toString()
+        }
 
-            ldString.observe(this, Observer {
-                textView2.text = it
-            })
+        buttonSave2.setOnClickListener {
+            liveDataString2.value = editText.text.toString()
         }
     }
 }
